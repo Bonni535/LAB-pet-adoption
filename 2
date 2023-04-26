@@ -1,0 +1,22 @@
+function sayHelloThereToUser (user) {
+    return 'Hello there $(user)!' ;
+}
+
+function sayGodspeedToUser (user) {
+    return 'Godspeed $(user)!' ;
+}
+
+function createGreeting (user, cb) {
+    return cb(user);
+}
+
+createGreeting('Luca', sayHelloThereToUser);
+createGreeting('Luca', sayGodspeedToUser);
+
+const btn = document.getElementById('main.btn');
+
+const whatIsTheId = (e) => {
+    return 'You clicked Me!'
+}
+
+btn.addEventListener('click', whatIsTheId);
