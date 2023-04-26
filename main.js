@@ -241,18 +241,112 @@ const pets = [
     }
   ];
 
-  const targetingApp = document.querySelector("#app");
+  const renderToDom = (divId, htmlToRender) => {
+    const selectedDiv = document.querySelector(divId);
+    selectedDiv.innerHTML = htmlToRender;
+  };
+  
+  
 
-let domString = "";
-for (const pet of pets) {
-  // CARD FROM BOOTSTRAP: https://getbootstrap.com/docs/5.1/components/card/#example Removed the button
-  domString += `<div class="card" style="width: 18rem;">
-      <img src=${pet.imageUrl} class="card-img-top" alt=${pet.name}>
+  const cardsOnDom = (array) => {
+    let domString = "";
+    for (const pet of array) {
+      domString += `<div class="card" style="width: 18rem;">
+      <img src="${pet.imageUrl}" class="card-img-top" alt="...">
       <div class="card-body">
-        <h5 class="card-title">${pet.name}</h5>
-        <p class="card-text">${pet.ingredients}</p>
+        <p class="card-text">${pet.name}</p>
+        <p class="card-text">${pet.color}</p>
+        <p class="card-text">${pet.specialSkill}</p>
+        <p class="card-text">${pet.type}</p>
+        <p class="card-text">${pet.imageUrl}</p>
+        <button class="btn btn-danger" id="delete--${pet.id}">Delete</button>
+
       </div>
     </div>`;
-};
+    }
+    renderToDom("#app", domString);
+  }
 
-targetingApp.innerHTML = domString
+  const filter = (array, typeString) => {
+    const typeArray = [];
+
+    for (const pet of array) {
+      if (pet.type === typeString) {
+         typeArray.push(pet);
+      }
+    }
+  
+    return typeArray;
+  }
+
+  const showAllButton = document.querySelector("#showAll-btn");
+  const showCatButton = document.querySelector("#cat-btn");
+  const showDogButton = document.querySelector("#dog-btn");
+  const showDinoButton = document.querySelector("#showAll-btn");
+
+
+
+  showAllButton.addEventListener('click', () => {
+    cardsOnDom(pets);
+  });
+  showCatButton.addEventListener('click', () => {
+    const catPets = filter(pets, 'cat');
+    cardsOnDom(catPets);
+  });
+  showDogButton.addEventListener('click', () => {
+    const dogPets = filter(pets, 'dog');
+    cardsOnDom(dogPets);
+  });showDinoButton.addEventListener('click', () => {
+    const dinoPets = filter(pets, 'dino');
+    cardsOnDom(dinoPets);
+  });
+
+
+
+const form = document.querySelector('form');
+
+
+const createPet =  (e) =>{
+
+e.preventDefault();
+
+const newPetObj = {
+
+  id: pets.length + 1,
+  name: document.querySelector('#name').value,
+  color: document.querySelector('#color').value,
+  specialSkill: document.querySelector('#specialSkill').value,
+  type: document.querySelector('#type').value,
+  imageUrl: document.querySelector('#image').value,
+
+}
+
+pets.push(newPetObj);
+cardsOnDom(pets);
+form.reset();
+}
+
+form.addEventListener('submit' , createPet);
+
+app.addEventListener('click', (e) => {
+    
+  if (e.target.id.includes("delete")) {
+    const[, id] = e.target.id.split("--");
+
+    const index = pets.findIndex(e => e.id === Number(id));
+
+    pets.splice(index, 1);
+
+    cardsOnDom(pets);
+
+  }
+
+})
+
+
+
+const startApp = () => {
+  cardsOnDom(pets);
+}
+
+startApp();
